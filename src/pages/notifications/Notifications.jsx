@@ -58,6 +58,11 @@ const Notifications = () => {
     useState(items);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
+  const [filterPopup, setFilterPopup] = useState(false);
+  const [filters, setFilters] = useState({
+    channels: [],
+    actions: [],
+  });
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -97,6 +102,30 @@ const Notifications = () => {
     onCancel: handleCancel,
   };
 
+  const handleAction = (data) => {
+    console.log(data);
+  };
+  // filters
+  const handleApplyFilter = () => {};
+
+  const handleCancelFilter = () => {
+    setFilterPopup(false);
+  };
+
+  const filterFooter = {
+    addButtonText: "Apply",
+    onAdd: handleApplyFilter,
+    cancelButtonText: "Cancel",
+    onCancel: handleCancelFilter,
+  };
+
+  // delete
+  const handleDeleteNotification = () => {};
+
+  const handleCancelDelete = () => {
+    setDeletePopup(true);
+  };
+
   return (
     <>
       <div className="notification_wrapper">
@@ -113,7 +142,10 @@ const Notifications = () => {
                 <MagnifyingGlass size={14} />
               </button>
             </div>
-            <button className="notification_actions_btn notification_actions_filter_btn">
+            <button
+              className="notification_actions_btn notification_actions_filter_btn"
+              onClick={() => setFilterPopup(true)}
+            >
               <Faders size={14} />
               Filter
             </button>
@@ -138,7 +170,10 @@ const Notifications = () => {
             <div className="notification-undelivered-cards">
               {undeliveredNotification.map((notification) => (
                 <React.Fragment key={notification.notificationID}>
-                  <NotificationCard data={notification} />
+                  <NotificationCard
+                    data={notification}
+                    handleAction={handleAction}
+                  />
                 </React.Fragment>
               ))}
             </div>
@@ -152,7 +187,10 @@ const Notifications = () => {
             <div className="notification-delivered-cards">
               {undeliveredNotification.map((notification) => (
                 <React.Fragment key={notification.notificationID}>
-                  <NotificationCard data={notification} />
+                  <NotificationCard
+                    data={notification}
+                    handleAction={handleAction}
+                  />
                 </React.Fragment>
               ))}
             </div>
@@ -167,7 +205,11 @@ const Notifications = () => {
       >
         <NotificationForm formData={formData} handleChange={handleFormChange} />
       </Popup>
-      <Popup title="Delete Notification">
+      <Popup
+        isOpen={deletePopup}
+        onClose={handleCancelDelete}
+        title="Delete Notification"
+      >
         <div>
           <img src="" alt="" />
           <span>Delete Notification</span>
@@ -179,21 +221,30 @@ const Notifications = () => {
           <button>Delete</button>
         </div>
       </Popup>
-      <Popup title="Add Filters">
-        <div>
-          <div>
-            <span>Channels</span>
-            <div>
+      <Popup
+        title="Add Filters"
+        isOpen={filterPopup}
+        onClose={handleCancelFilter}
+        footer={filterFooter}
+      >
+        <div className="filters_wrapper">
+          <div className="filters_section">
+            <span className="filters_heading">Channels</span>
+            <div className="filters_items">
               {channels.map((item) => (
-                <div key={item.id}>{item.label}</div>
+                <div className="filters_item" key={item.id}>
+                  {item.label}
+                </div>
               ))}
             </div>
           </div>
-          <div>
-            <span>Actions</span>
-            <div>
+          <div className="filters_section">
+            <span className="filters_heading">Actions</span>
+            <div className="filters_items">
               {actions.map((item) => (
-                <div key={item.id}>{item.label}</div>
+                <div className="filters_item filters_item-active" key={item.id}>
+                  {item.label}
+                </div>
               ))}
             </div>
           </div>

@@ -151,3 +151,51 @@
 .notification-delivered-cards::-webkit-scrollbar {
   display: none;
 }
+
+/* filters */
+
+.filters_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.filters_section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filters_heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.filters_items {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.filters_item {
+  border: 1px solid #dfe4e9;
+  border-radius: 1rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+}
+
+.filters_item:hover {
+  background: #f5f5f5;
+}
+
+.filters_item-active {
+  border-color: #b21c64;
+  color: #b21c64;
+  background: #ffe9f3;
+}
+
+.filters_item-active:hover {
+  background: #fdd5e7;
+}

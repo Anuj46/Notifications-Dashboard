@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./notificationForm.css";
 
-const NotificationForm = ({ formData, handleChange }) => {
+const NotificationForm = ({ formData, handleChange, handleAction }) => {
   return (
     <div className="form-wrapper">
       <div className="form-group">

@@ -2,17 +2,43 @@ import React from "react";
 import { PencilLine, Trash } from "@phosphor-icons/react";
 import "./notificationCard.css";
 
-const NotificationCard = ({ data }) => {
+const NotificationCard = ({ data, handleAction }) => {
   return (
     <div className="notification-card">
       {!data.sent && (
         <div className="notification-actions">
-          <input type="checkbox" className="notification-checkbox" />
+          <input
+            type="checkbox"
+            className="notification-checkbox"
+            onChange={(e) => {
+              handleAction({
+                action: "select",
+                id: data.notificationID,
+                checked: e.target.checked,
+              });
+            }}
+          />
           <div className="notification-actions-right">
-            <button className="notification-action-btn">
+            <button
+              className="notification-action-btn"
+              onClick={() => {
+                handleAction({
+                  action: "edit",
+                  id: data.notificationID,
+                });
+              }}
+            >
               <PencilLine size={14} color="#0277CA" />
             </button>
-            <button className="notification-action-btn">
+            <button
+              className="notification-action-btn"
+              onClick={() => {
+                handleAction({
+                  action: "delete",
+                  id: data.notificationID,
+                });
+              }}
+            >
               <Trash size={14} color="#F5000E" />
             </button>
           </div>
