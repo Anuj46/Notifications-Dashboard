@@ -1,0 +1,55 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #dfe4e9;
+}
+
+.header_icon {
+  font-weight: 600;
+}
+
+.header_menus {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.header_menu {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.header_menu_label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.header_right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header_right_icon_wrapper {
+  height: 1.5rem;
+  width: 1.5rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dfe4e9;
+  border-radius: 0.5rem;
+}
+
+.header_right_user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header_right_user_name {
+  font-size: 0.85rem;
+  font-weight: 500;
+}

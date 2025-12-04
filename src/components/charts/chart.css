@@ -1,0 +1,9 @@
+#line-chart,
+#donut-chart,
+#column-chart {
+  height: 100%;
+  width: 100%;
+  max-height: 55vh;
+}
+
+
