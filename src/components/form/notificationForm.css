@@ -1,0 +1,77 @@
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-select,
+.form-input,
+.form-textarea {
+  padding: 0.625rem 1rem;
+  border: 1px solid #dfe4e9;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.form-textarea {
+  cursor: pointer;
+  resize: none;
+}
+
+.form-select:hover,
+.form-input:hover,
+.form-textarea:hover {
+  border-color: #9ca3af;
+}
+
+.form-select:focus,
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #b21c64;
+  box-shadow: 0 0 0 3px #ffe9f3;
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 2rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label:hover .checkbox-text {
+  color: #111827;
+}
+
+.form-checkbox {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #dfe4e9;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  accent-color: #b21c64;
+}
+
+.checkbox-text {
+  font-size: 0.875rem;
+}

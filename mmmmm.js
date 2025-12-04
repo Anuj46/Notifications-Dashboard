@@ -109,5 +109,617 @@ export const mockService = {
   },
 };
 
-
-
+export const items = [
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+  {
+    title: " asdf",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+    notificationID: "1255455",
+    actions: [
+      {
+        label: "Mark as read",
+        id: "read",
+        count: 0,
+      },
+      {
+        label: "Like",
+        id: "like",
+        count: 0,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        count: 0,
+      },
+    ],
+    channels: [
+      {
+        label: "SMS",
+        id: "sms",
+      },
+      {
+        label: "E-mail",
+        id: "email",
+      },
+      {
+        label: "WhatsApp",
+        id: "whatsapp",
+      },
+      {
+        label: "In-App",
+        id: "in-app",
+      },
+      {
+        label: "Teams",
+        id: "teams",
+      },
+      {
+        label: "Slack",
+        id: "slack",
+      },
+    ],
+    sent: false,
+    created: "24-02-2025",
+  },
+];

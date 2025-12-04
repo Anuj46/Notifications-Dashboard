@@ -97,60 +97,58 @@ const profitData = {
 const Dashboard = () => {
   const [tilesData, setTilesData] = useState(items);
   return (
-    <div className="dashboard_wrapper">
-      <div className="dashboard">
-        <div className="dashboard_heading">Dashboard</div>
-        <div className="dashboard_content">
-          <div className="dashboard_tiles">
-            {tilesData.map((item) => (
-              <div className="dashboard_tile" key={item.label}>
-                <Card data={item} />
-              </div>
-            ))}
+    <div className="dashboard">
+      <div className="dashboard_heading">Dashboard</div>
+      <div className="dashboard_content">
+        <div className="dashboard_tiles">
+          {tilesData.map((item) => (
+            <div className="dashboard_tile" key={item.label}>
+              <Card data={item} />
+            </div>
+          ))}
+        </div>
+        <div className="dashboard_graphs">
+          <div className="dashboard_graph">
+            <div className="dashboard_graph_heading">
+              Notifications Delivered
+            </div>
+            <div className="dashboard_graph_box">
+              <Linechart
+                series={sampleData.series}
+                categories={sampleData.categories}
+                title={sampleData.title}
+                xAxisTitle={sampleData.xAxisTitle}
+                yAxisTitle={sampleData.yAxisTitle}
+                minY={sampleData.minY}
+                maxY={sampleData.maxY}
+                colors={sampleData.colors}
+              />
+            </div>
           </div>
-          <div className="dashboard_graphs">
-            <div className="dashboard_graph">
-              <div className="dashboard_graph_heading">
-                Notifications Delivered
-              </div>
-              <div className="dashboard_graph_box">
-                <Linechart
-                  series={sampleData.series}
-                  categories={sampleData.categories}
-                  title={sampleData.title}
-                  xAxisTitle={sampleData.xAxisTitle}
-                  yAxisTitle={sampleData.yAxisTitle}
-                  minY={sampleData.minY}
-                  maxY={sampleData.maxY}
-                  colors={sampleData.colors}
-                />
-              </div>
+          <div className="dashboard_graph">
+            <div className="dashboard_graph_heading">User Actions</div>
+            <div className="dashboard_graph_box">
+              <DonutChart
+                series={sampleData1.series}
+                labels={sampleData1.labels}
+                colors={sampleData1.colors}
+                width={sampleData1.width}
+                //   height={sampleData1.height}
+              />
             </div>
-            <div className="dashboard_graph">
-              <div className="dashboard_graph_heading">User Actions</div>
-              <div className="dashboard_graph_box">
-                <DonutChart
-                  series={sampleData1.series}
-                  labels={sampleData1.labels}
-                  colors={sampleData1.colors}
-                  width={sampleData1.width}
-                  //   height={sampleData1.height}
-                />
-              </div>
-            </div>
-            <div className="dashboard_graph">
-              <div className="dashboard_graph_heading">Channel Utilization</div>
-              <div className="dashboard_graph_box">
-                <ColumChart
-                  series={profitData.series}
-                  categories={profitData.categories}
-                  yAxisTitle={profitData.yAxisTitle}
-                  xAxisTitle={profitData.xAxisTitle}
-                  colors={profitData.colors}
-                  columnWidth={profitData.columnWidth}
-                  tooltipFormatter={profitData.tooltipFormatter}
-                />
-              </div>
+          </div>
+          <div className="dashboard_graph">
+            <div className="dashboard_graph_heading">Channel Utilization</div>
+            <div className="dashboard_graph_box">
+              <ColumChart
+                series={profitData.series}
+                categories={profitData.categories}
+                yAxisTitle={profitData.yAxisTitle}
+                xAxisTitle={profitData.xAxisTitle}
+                colors={profitData.colors}
+                columnWidth={profitData.columnWidth}
+                tooltipFormatter={profitData.tooltipFormatter}
+              />
             </div>
           </div>
         </div>

@@ -12,11 +12,13 @@ function App() {
       <div className="app_wrapper">
         <Header />
 
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="*" element={<div> Not found </div>} />
-        </Routes>
+        <div className="page_wrapper">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="*" element={<div> Not found </div>} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

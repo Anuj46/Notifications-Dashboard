@@ -1,10 +1,63 @@
 import React, { useState } from "react";
 import "./notification.css";
 import Popup from "../../components/popup/Popup";
+import {
+  MagnifyingGlass,
+  Faders,
+  Plus,
+  PaperPlaneRight,
+} from "@phosphor-icons/react";
+import NotificationCard from "../../components/cards/NotificationCard";
+import NotificationForm from "../../components/form/NotificationForm";
+import { items } from "../../../mmmmm";
+
+const channels = [
+  {
+    label: "SMS",
+    id: "sms",
+  },
+  {
+    label: "E-mail",
+    id: "email",
+  },
+  {
+    label: "WhatsApp",
+    id: "whatsapp",
+  },
+  {
+    label: "In-App",
+    id: "in-app",
+  },
+  {
+    label: "Teams",
+    id: "teams",
+  },
+  {
+    label: "Slack",
+    id: "slack",
+  },
+];
+
+const actions = [
+  {
+    label: "Mark as read",
+    id: "read",
+  },
+  {
+    label: "Like",
+    id: "like",
+  },
+  {
+    label: "Dismiss",
+    id: "dismiss",
+  },
+];
 
 const Notifications = () => {
-  // ////////////////////
+  const [undeliveredNotification, setUndeliveredNotifications] =
+    useState(items);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [deletePopup, setDeletePopup] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -15,143 +68,138 @@ const Notifications = () => {
     dismiss: false,
   });
 
-  const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    setIsPopupOpen(false);
+  const handleFormChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleSubmit = () => {
+    console.log("Form submitted:", formData);
+    handleCancel();
+  };
+
+  const handleCancel = () => {
+    setIsPopupOpen(false);
+    setFormData({
+      title: "",
+      description: "",
+      channel: "",
+      frequency: "",
+      validTill: "",
+      markAsRead: false,
+      dismiss: false,
+    });
   };
 
   const footer = {
     addButtonText: "Add",
     onAdd: handleSubmit,
     cancelButtonText: "Cancel",
-    onCancel: () => setIsPopupOpen(false),
+    onCancel: handleCancel,
   };
 
-  const content = (
-    <div className="form-container">
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label">Add Icon/Visual</label>
-          <button className="upload-btn">Upload</button>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Channel</label>
-          <select
-            className="form-select"
-            value={formData.channel}
-            onChange={(e) => handleChange("channel", e.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="email">Email</option>
-            <option value="sms">SMS</option>
-            <option value="push">Push</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label">Valid Till</label>
-          <div className="input-icon-wrapper">
-            <input
-              type="date"
-              className="form-input with-icon"
-              value={formData.validTill}
-              onChange={(e) => handleChange("validTill", e.target.value)}
-            />
+  return (
+    <>
+      <div className="notification_wrapper">
+        <div className="notification_header">
+          <span className="notification_heading">Notifications</span>
+          <div className="notification_actions">
+            <div className="notification_search">
+              <input
+                type="text"
+                placeholder="Search by Title"
+                className="notification_search_field"
+              />
+              <button className="notification_search_button">
+                <MagnifyingGlass size={14} />
+              </button>
+            </div>
+            <button className="notification_actions_btn notification_actions_filter_btn">
+              <Faders size={14} />
+              Filter
+            </button>
+            <button
+              className="notification_actions_btn notification_actions_add_btn"
+              onClick={() => setIsPopupOpen(true)}
+            >
+              <Plus size={14} color="#ffff" /> Add
+            </button>
           </div>
         </div>
-
-        <div className="form-group">
-          <label className="form-label">Frequency</label>
-          <select
-            className="form-select"
-            value={formData.frequency}
-            onChange={(e) => handleChange("frequency", e.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="once">Once</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-          </select>
+        <div className="notification-content">
+          <div className="notification-content-section">
+            <div className="notification-content-header">
+              <span className="notification-content-heading">
+                Undelivered Notifications
+              </span>
+              <button className="notification_actions_btn notification-sent">
+                Send <PaperPlaneRight size={12} />
+              </button>
+            </div>
+            <div className="notification-undelivered-cards">
+              {undeliveredNotification.map((notification) => (
+                <React.Fragment key={notification.notificationID}>
+                  <NotificationCard data={notification} />
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+          <div className="notification-content-section notification-delivered-section">
+            <div className="notification-content-header">
+              <span className="notification-content-heading">
+                Delivered Notifications
+              </span>
+            </div>
+            <div className="notification-delivered-cards">
+              {undeliveredNotification.map((notification) => (
+                <React.Fragment key={notification.notificationID}>
+                  <NotificationCard data={notification} />
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className="form-group">
-        <label className="form-label">Title</label>
-        <input
-          type="text"
-          placeholder="Write title"
-          className="form-input"
-          value={formData.title}
-          onChange={(e) => handleChange("title", e.target.value)}
-        />
-      </div>
-
-      <div className="form-group">
-        <label className="form-label">Description</label>
-        <textarea
-          placeholder="Write here..."
-          rows={4}
-          className="form-textarea"
-          value={formData.description}
-          onChange={(e) => handleChange("description", e.target.value)}
-        />
-      </div>
-
-      <div className="form-group">
-        <label className="form-label">Actions</label>
-        <div className="checkbox-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              className="form-checkbox"
-              checked={formData.markAsRead}
-              onChange={(e) => handleChange("markAsRead", e.target.checked)}
-            />
-            <span>Mark as read</span>
-          </label>
-
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              className="form-checkbox"
-              checked={formData.dismiss}
-              onChange={(e) => handleChange("dismiss", e.target.checked)}
-            />
-            <span>Dismiss</span>
-          </label>
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handleCancel}
+        title="Add Notification"
+        footer={footer}
+      >
+        <NotificationForm formData={formData} handleChange={handleFormChange} />
+      </Popup>
+      <Popup title="Delete Notification">
+        <div>
+          <img src="" alt="" />
+          <span>Delete Notification</span>
+          <span>
+            Your file has been processed, and the summary has been sent to your
+            registered email ID.
+          </span>
+          <button>Cancel</button>
+          <button>Delete</button>
         </div>
-      </div>
-    </div>
-  );
-
-  // //////////////'
-  return (
-    <div>
-      <div>
-        <button
-          onClick={() => setIsPopupOpen(true)}
-          className="btn btn-primary"
-        >
-          Open Popup with Header & Footer
-        </button>
-        <Popup
-          isOpen={isPopupOpen}
-          onClose={() => setIsPopupOpen(false)}
-          title="Add Notification"
-          footer={footer}
-        >
-          {content}
-        </Popup>
-      </div>
-      
-    </div>
+      </Popup>
+      <Popup title="Add Filters">
+        <div>
+          <div>
+            <span>Channels</span>
+            <div>
+              {channels.map((item) => (
+                <div key={item.id}>{item.label}</div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <span>Actions</span>
+            <div>
+              {actions.map((item) => (
+                <div key={item.id}>{item.label}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Popup>
+    </>
   );
 };
 

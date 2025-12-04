@@ -8,6 +8,7 @@ import {
 } from "@phosphor-icons/react";
 import "./header.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import Popup from "../popup/Popup";
 
 const navigations = [
   {
@@ -40,35 +41,39 @@ const Header = () => {
   }, [location.pathname]);
 
   return (
-    <div className="header">
-      <span className="header_icon">Notification Management</span>
-      <div className="header_menus">
-        {menus.map((item) => (
-          <div
-            className="header_menu"
-            key={item.path}
-            style={{
-              color: seletedMenu === item.key ? "#B21C64" : "#737791",
-            }}
-            onClick={() => navigate(item.path)}
-          >
-            {item.icon} <span className="header_menu_label">{item.label}</span>
-          </div>
-        ))}
-      </div>
-      <div className="header_right">
-        <div className="header_right_icon_wrapper">
-          <Bell size={14} />
+    <>
+      <div className="header">
+        <span className="header_icon">Notification Management</span>
+        <div className="header_menus">
+          {menus.map((item) => (
+            <div
+              className="header_menu"
+              key={item.path}
+              style={{
+                color: seletedMenu === item.key ? "#B21C64" : "#737791",
+              }}
+              onClick={() => navigate(item.path)}
+            >
+              {item.icon}{" "}
+              <span className="header_menu_label">{item.label}</span>
+            </div>
+          ))}
         </div>
-        <LineVertical size={16} color="#737791" />
-        <div className="header_right_user">
+        <div className="header_right">
           <div className="header_right_icon_wrapper">
-            <User size={14} />
+            <Bell size={14} />
           </div>
-          <span className="header_right_user_name">John Doe</span>
+          <LineVertical size={16} color="#737791" />
+          <div className="header_right_user">
+            <div className="header_right_icon_wrapper">
+              <User size={14} />
+            </div>
+            <span className="header_right_user_name">John Doe</span>
+          </div>
         </div>
       </div>
-    </div>
+      <Popup title="Add Filters"></Popup>
+    </>
   );
 };
 
