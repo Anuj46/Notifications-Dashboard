@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import {
   ChartBar,
   ChatCenteredDots,
@@ -29,8 +29,6 @@ const navigations = [
 ];
 
 const Header = () => {
-  const [menus, setMenus] = useState(navigations);
-  const [seletedMenu, setSelectedMenu] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,36 +36,30 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (location.pathname.split("/")[1]) {
-      setSelectedMenu("notification");
-    } else {
-      setSelectedMenu("dashboard");
-    }
+  const selectedMenu = useMemo(() => {
+    const firstSegment = location.pathname.split("/")[1];
+    return firstSegment ? "notification" : "dashboard";
   }, [location.pathname]);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     setLoading(true);
     try {
       const res = await userNotificationApi.getNotification();
-
-      setNotifications(res.data.notifications);
-    } catch (error) {
-      console.error(error);
+      setNotifications(res.data.notifications || []);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [fetchNotifications]);
 
-  const handleCancel = () => {
-    setIsPopupOpen(false);
-  };
+  const closePopup = () => setIsPopupOpen(false);
 
-  const markAllRead = async () => {
+  const handleMarkAllRead = async () => {
     try {
       await userNotificationApi.markAllReadNotification();
       fetchNotifications();
@@ -76,7 +68,7 @@ const Header = () => {
     }
   };
 
-  const deleteNotification = async (id) => {
+  const handleDelete = async (id) => {
     try {
       await userNotificationApi.deleteNotification(id);
       fetchNotifications();
@@ -85,62 +77,67 @@ const Header = () => {
     }
   };
 
-  const handleOtherActions = async (action) => {
+  const handleUserAction = async (actionData) => {
     try {
-      await userNotificationApi.markNotification(action);
+      await userNotificationApi.markNotification(actionData);
       fetchNotifications();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleMarkAllRead = () => {
-    markAllRead();
-  };
-
-  const footer = {
-    addButtonText: "Mark All Read",
-    onAdd: handleMarkAllRead,
-    cancelButtonText: "Cancel",
-    onCancel: handleCancel,
-    size: "fit-content",
-  };
-
   const handleAction = (data) => {
-    if (data.action === "dismiss") {
-      deleteNotification(data.notificationID);
-    } else {
-      handleOtherActions(data);
-    }
+    if (data.action === "dismiss") handleDelete(data.notificationID);
+    else handleUserAction(data);
   };
+
+  const footer = useMemo(
+    () => ({
+      addButtonText: "Mark All Read",
+      onAdd: handleMarkAllRead,
+      cancelButtonText: "Cancel",
+      onCancel: closePopup,
+      size: "fit-content",
+    }),
+    []
+  );
 
   return (
     <>
       <div className="header">
         <span className="header_icon">Notification Management</span>
+
         <div className="header_menus">
-          {menus.map((item) => (
+          {navigations.map((item) => (
             <div
+              key={item.key}
               className="header_menu"
-              key={item.path}
               style={{
-                color: seletedMenu === item.key ? "#B21C64" : "#737791",
+                color: selectedMenu === item.key ? "#B21C64" : "#737791",
               }}
               onClick={() => navigate(item.path)}
             >
-              {item.icon}{" "}
+              {item.icon}
               <span className="header_menu_label">{item.label}</span>
             </div>
           ))}
         </div>
+
         <div className="header_right">
           <div
-            className="header_right_icon_wrapper"
+            className="header_right_icon_wrapper notification_indicator-wrapper"
             onClick={() => setIsPopupOpen(true)}
           >
             <Bell size={14} />
+            {notifications.length > 0 && (
+              <div className="notification_indicator">
+                {notifications.length}
+              </div>
+            )}
           </div>
+
           <LineVertical size={16} color="#737791" />
+
           <div className="header_right_user">
             <div className="header_right_icon_wrapper">
               <User size={14} />
@@ -149,24 +146,27 @@ const Header = () => {
           </div>
         </div>
       </div>
+
       <Popup
         title="Notifications"
         footer={footer}
         isOpen={isPopupOpen}
-        onClose={handleCancel}
+        onClose={closePopup}
       >
         <div className="user_notifications_container">
           {loading ? (
             <Loader />
-          ) : (
-            notifications.length > 0 &&
-            notifications.map((item) => (
+          ) : notifications.length > 0 ? (
+            notifications.map((notif) => (
               <NotificationCard
-                data={item}
+                key={notif.notificationID}
+                data={notif}
                 user={true}
                 handleAction={handleAction}
               />
             ))
+          ) : (
+            <p className="no_notifications">No notifications found.</p>
           )}
         </div>
       </Popup>

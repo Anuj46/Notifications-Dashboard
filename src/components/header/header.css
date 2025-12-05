@@ -44,6 +44,22 @@
   cursor: pointer;
 }
 
+.notification_indicator-wrapper {
+  position: relative;
+}
+
+.notification_indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background: rgb(255, 38, 38);
+  color: #fff;
+  font-size: 0.625rem;
+  padding-inline: 0.2rem;
+  border-radius: 1rem;
+}
+
 .header_right_user {
   display: flex;
   align-items: center;
