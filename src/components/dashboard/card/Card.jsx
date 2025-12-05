@@ -2,16 +2,6 @@ import React from "react";
 import { ArrowUp, ArrowDown } from "@phosphor-icons/react";
 import "./card.css";
 
-//   {
-//     value: "125",
-//     label: "Delivery Rate",
-//     sublabel: "Compared To Last Month",
-//     percentage: {
-//       value: "8%",
-//       increase: true,
-//     },
-//   },
-
 const Card = ({ data }) => {
   return (
     <div className="tile">

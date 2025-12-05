@@ -10,6 +10,8 @@ import "./header.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Popup from "../popup/Popup";
 import NotificationCard from "../cards/NotificationCard";
+import { userNotificationApi } from "../../server";
+import Loader from "../loader/Loader";
 
 const navigations = [
   {
@@ -26,197 +28,12 @@ const navigations = [
   },
 ];
 
-const obj = [
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-  {
-    title: "TEST title",
-    description: "This is a test description",
-    notificationID: "125454545",
-    sentTime: "24 Nov 2025",
-    actions: [
-      {
-        label: "Like",
-        id: "like",
-        status: true,
-      },
-      {
-        label: "Dismiss",
-        id: "dismiss",
-        status: true,
-      },
-      {
-        label: "Mark as read",
-        id: "read",
-        status: true,
-      },
-    ],
-  },
-];
-
 const Header = () => {
   const [menus, setMenus] = useState(navigations);
   const [seletedMenu, setSelectedMenu] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -229,11 +46,57 @@ const Header = () => {
     }
   }, [location.pathname]);
 
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const res = await userNotificationApi.getNotification();
+
+      setNotifications(res.data.notifications);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
   const handleCancel = () => {
     setIsPopupOpen(false);
   };
 
-  const handleMarkAllRead = () => {};
+  const markAllRead = async () => {
+    try {
+      await userNotificationApi.markAllReadNotification();
+      fetchNotifications();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteNotification = async (id) => {
+    try {
+      await userNotificationApi.deleteNotification(id);
+      fetchNotifications();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleOtherActions = async (action) => {
+    try {
+      await userNotificationApi.markNotification(action);
+      fetchNotifications();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleMarkAllRead = () => {
+    markAllRead();
+  };
 
   const footer = {
     addButtonText: "Mark All Read",
@@ -244,7 +107,11 @@ const Header = () => {
   };
 
   const handleAction = (data) => {
-    console.log(data);
+    if (data.action === "dismiss") {
+      deleteNotification(data.notificationID);
+    } else {
+      handleOtherActions(data);
+    }
   };
 
   return (
@@ -283,19 +150,24 @@ const Header = () => {
         </div>
       </div>
       <Popup
-        title="Add Filters"
+        title="Notifications"
         footer={footer}
         isOpen={isPopupOpen}
         onClose={handleCancel}
       >
         <div className="user_notifications_container">
-          {obj.map((item) => (
-            <NotificationCard
-              data={item}
-              user={true}
-              handleAction={handleAction}
-            />
-          ))}
+          {loading ? (
+            <Loader />
+          ) : (
+            notifications.length > 0 &&
+            notifications.map((item) => (
+              <NotificationCard
+                data={item}
+                user={true}
+                handleAction={handleAction}
+              />
+            ))
+          )}
         </div>
       </Popup>
     </>

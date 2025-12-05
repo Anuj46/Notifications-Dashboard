@@ -26,58 +26,73 @@ export const userNotificationApi = {
   },
 
   async markNotification(action) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const userNotifications =
         getLocalStorageNotifications(localStorageUserKey);
 
       apiDelay(400).then(() => {
-        const newNotifications = userNotifications.map((notification) => {
-          if (notification.notificationID === action.id) {
+        const updatedNotifications = userNotifications.map((notification) => {
+          if (notification.notificationID === action.notificationID) {
             return {
               ...notification,
-              [action.key]: action.value,
+              actionItems: notification.actionItems.map((item) => {
+                if (item.id === action.action) {
+                  return { ...item, status: action.status };
+                }
+                return item;
+              }),
             };
           }
           return notification;
         });
 
-        saveLocalStorageNotifications(localStorageUserKey, newNotifications);
-
-        //   add count to all the notifications
+        saveLocalStorageNotifications(
+          localStorageUserKey,
+          updatedNotifications
+        );
 
         resolve({
           statusCode: 200,
           status: "success",
-          message: "Notification marked as read",
+          message: "Notification updated successfully",
+          data: {
+            notifications: updatedNotifications,
+          },
         });
       });
     });
   },
 
   async markAllReadNotification() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       apiDelay(400).then(() => {
-        const markReadarr = [];
         const userNotifications =
           getLocalStorageNotifications(localStorageUserKey);
 
-        const newNotifications = userNotifications.map((notification) => {
-          if (!notification.read) {
-            markReadarr.push(notification.notificationID);
-          }
+        const updatedNotifications = userNotifications.map((notification) => {
           return {
             ...notification,
-            read: true,
+            actionItems: notification.actionItems.map((item) => {
+              if (item.id === "read") {
+                return { ...item, status: true };
+              }
+              return item;
+            }),
           };
         });
 
-        // add count to all the notifications
+        localStorage.setItem(
+          localStorageUserKey,
+          JSON.stringify(updatedNotifications)
+        );
 
-        saveLocalStorageNotifications(localStorageUserKey, newNotifications);
         resolve({
           statusCode: 200,
           status: "success",
-          message: "All notifications are marked as read",
+          message: "All notifications marked as read",
+          data: {
+            notifications: updatedNotifications,
+          },
         });
       });
     });
@@ -105,9 +120,3 @@ export const userNotificationApi = {
   },
 };
 
-// const obj = {
-//   title,
-//   description,
-//   actions:[{label,marked}]
-//  getDate
-// };

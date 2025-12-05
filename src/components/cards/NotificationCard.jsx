@@ -93,7 +93,7 @@ const NotificationCard = ({ data, handleAction, user = false }) => {
       {user && (
         <div className="notification-actions">
           <div className="notification-actions-btns">
-            {data.actions.map((item) => (
+            {data?.actionItems?.map((item) => (
               <button
                 className={`notification-actions-btn ${
                   item.status && "notification-actions-btn-active"

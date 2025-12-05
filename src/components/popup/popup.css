@@ -91,3 +91,9 @@
 .btn-secondary:hover {
   background-color: #f9fafb;
 }
+
+@media (max-width: 576px) {
+  .popup-container {
+    max-width: 97.5vw;
+  }
+}

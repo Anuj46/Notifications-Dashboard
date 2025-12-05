@@ -41,6 +41,7 @@
   place-items: center;
   border: 1px solid #dfe4e9;
   border-radius: 0.5rem;
+  cursor: pointer;
 }
 
 .header_right_user {

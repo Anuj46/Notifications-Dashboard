@@ -11,7 +11,6 @@ const DonutChart = ({ series, labels, colors, width, height, responsive }) => {
     colors: colors || undefined,
     responsive: responsive || [
       {
-        // breakpoint: 480,
         options: {
           chart: {
             width: 200,

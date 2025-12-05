@@ -11,6 +11,7 @@ import NotificationCard from "../../components/cards/NotificationCard";
 import NotificationForm from "../../components/form/NotificationForm";
 import delete_img from "../../assets/delete_img.png";
 import { notificationApi, dashboardAPI } from "../../server";
+import Loader from "../../components/loader/Loader";
 
 const Notifications = () => {
   const [undeliveredNotification, setUndeliveredNotifications] = useState([]);
@@ -18,8 +19,8 @@ const Notifications = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
   const [filterPopup, setFilterPopup] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // ---- DEFAULT Filters ----
   const defaultFilters = {
     sortBy: "desc",
     channels: [],
@@ -42,7 +43,6 @@ const Notifications = () => {
   const [actions, setActions] = useState([]);
   const [channels, setChannels] = useState([]);
 
-  // Fetch Actions
   const fetchActions = async () => {
     try {
       const res = await dashboardAPI.getActions();
@@ -52,7 +52,6 @@ const Notifications = () => {
     }
   };
 
-  // Fetch Channels
   const fetchChannels = async () => {
     try {
       const res = await dashboardAPI.getChannels();
@@ -62,32 +61,32 @@ const Notifications = () => {
     }
   };
 
-  // Fetch Notifications
   const fetchNotifications = async (
     filterObj = defaultFilters,
     search = ""
   ) => {
+    setLoading(true);
     try {
       const res = await notificationApi.getNotifications({
         ...filterObj,
-        searchQuery: search, // ⬅ added
+        searchQuery: search,
       });
 
       setDeliveredNotifications(res.data.sentNotifications);
       setUndeliveredNotifications(res.data.unsentNotifications);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Initial Load
   useEffect(() => {
     fetchActions();
     fetchChannels();
     fetchNotifications(defaultFilters);
   }, []);
 
-  // ---- Search ----
   const handleSearch = () => {
     fetchNotifications(appliedFilters, searchQuery);
   };
@@ -99,7 +98,6 @@ const Notifications = () => {
     }
   };
 
-  // ---- Form ----
   const handleFormChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -127,14 +125,11 @@ const Notifications = () => {
     onCancel: handleCancel,
   };
 
-  // ---- Notification Actions ----
   const handleAction = (data) => {
     if (data.action === "delete") {
       setDeletePopup(true);
     }
   };
-
-  // ---- FILTER LOGIC ----
 
   const handleSortBy = (value) => {
     setFilters((prev) => ({ ...prev, sortBy: value }));
@@ -165,7 +160,7 @@ const Notifications = () => {
   };
 
   const handleCancelFilter = () => {
-    setFilters(appliedFilters); // Restore last applied
+    setFilters(appliedFilters);
     setFilterPopup(false);
   };
 
@@ -176,7 +171,6 @@ const Notifications = () => {
     onCancel: handleCancelFilter,
   };
 
-  // ---- Delete ----
   const handleDeleteNotification = () => {
     setDeletePopup(false);
   };
@@ -187,7 +181,6 @@ const Notifications = () => {
 
   return (
     <>
-      {/* HEADER */}
       <div className="notification_wrapper">
         <div className="notification_header">
           <span className="notification_heading">Notifications</span>
@@ -227,9 +220,7 @@ const Notifications = () => {
           </div>
         </div>
 
-        {/* CONTENT */}
         <div className="notification-content">
-          {/* Undelivered */}
           <div className="notification-content-section">
             <div className="notification-content-header">
               <span className="notification-content-heading">
@@ -241,17 +232,20 @@ const Notifications = () => {
             </div>
 
             <div className="notification-undelivered-cards">
-              {undeliveredNotification.map((notification) => (
-                <NotificationCard
-                  key={notification.notificationID}
-                  data={notification}
-                  handleAction={handleAction}
-                />
-              ))}
+              {loading ? (
+                <Loader />
+              ) : (
+                undeliveredNotification.map((notification) => (
+                  <NotificationCard
+                    key={notification.notificationID}
+                    data={notification}
+                    handleAction={handleAction}
+                  />
+                ))
+              )}
             </div>
           </div>
 
-          {/* Delivered */}
           <div className="notification-content-section notification-delivered-section">
             <div className="notification-content-header">
               <span className="notification-content-heading">
@@ -259,20 +253,23 @@ const Notifications = () => {
               </span>
             </div>
 
-            <div className="notification-delivered-cards">
-              {deliveredNotifications.map((notification) => (
-                <NotificationCard
-                  key={notification.notificationID}
-                  data={notification}
-                  handleAction={handleAction}
-                />
-              ))}
-            </div>
+            {loading ? (
+              <Loader />
+            ) : (
+              <div className="notification-delivered-cards">
+                {deliveredNotifications.map((notification) => (
+                  <NotificationCard
+                    key={notification.notificationID}
+                    data={notification}
+                    handleAction={handleAction}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* POPUPS */}
       <Popup
         isOpen={isPopupOpen}
         onClose={handleCancel}
@@ -310,7 +307,6 @@ const Notifications = () => {
         </div>
       </Popup>
 
-      {/* FILTER POPUP */}
       <Popup
         title="Add Filters"
         isOpen={filterPopup}
@@ -318,7 +314,6 @@ const Notifications = () => {
         footer={filterFooter}
       >
         <div className="filters_wrapper">
-          {/* Sort */}
           <div className="filters_section">
             <span className="filters_heading">Sort By</span>
             <div className="filters_items">
@@ -350,7 +345,6 @@ const Notifications = () => {
             </div>
           </div>
 
-          {/* Channels */}
           <div className="filters_section">
             <span className="filters_heading">Channels</span>
             <div className="filters_items">
@@ -370,7 +364,6 @@ const Notifications = () => {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="filters_section">
             <span className="filters_heading">Actions</span>
             <div className="filters_items">
