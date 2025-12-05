@@ -2,10 +2,10 @@ import React from "react";
 import { PencilLine, Trash } from "@phosphor-icons/react";
 import "./notificationCard.css";
 
-const NotificationCard = ({ data, handleAction }) => {
+const NotificationCard = ({ data, handleAction, user = false }) => {
   return (
     <div className="notification-card">
-      {!data.sent && (
+      {!data.sent && !user && (
         <div className="notification-actions">
           <input
             type="checkbox"
@@ -44,45 +44,76 @@ const NotificationCard = ({ data, handleAction }) => {
           </div>
         </div>
       )}
-      <div className="notification-metadata">
-        Channels:
+      {!user && (
         <div className="notification-metadata">
-          {data.channels.slice(0, 3).map((item, index) => (
-            <div
-              style={{
-                padding: index === 2 && "0",
-                borderRight: index === 2 && "none",
-              }}
-              className="notification-metadata-items"
-              key={item.id}
-            >
-              {item.label}
-            </div>
-          ))}
-          {data.channels.length > 3 && (
-            <div className="notification-plus">+{data.channels.length - 3}</div>
-          )}
+          Channels:
+          <div className="notification-metadata">
+            {data.channels.slice(0, 3).map((item, index) => (
+              <div
+                style={{
+                  padding: index === 2 && "0",
+                  borderRight: index === 2 && "none",
+                }}
+                className="notification-metadata-items"
+                key={item.id}
+              >
+                {item.label}
+              </div>
+            ))}
+            {data.channels.length > 3 && (
+              <div className="notification-plus">
+                +{data.channels.length - 3}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
       <p className="notification-title">{data.title}</p>
       <p className="notification-description">{data.description}</p>
-      <div className="notification-metadata">
-        Actions:
+      {!user && (
         <div className="notification-metadata">
-          {data.actions.map((item, index) => (
-            <div
-              key={item.id}
-              className="notification-metadata-items"
-              style={{
-                padding: index === data.actions.length - 1 && "0",
-                borderRight: index === data.actions.length - 1 && "none",
-              }}
-            >
-              {item.label}
-            </div>
-          ))}
+          Actions:
+          <div className="notification-metadata">
+            {data.actions.map((item, index) => (
+              <div
+                key={item.id}
+                className="notification-metadata-items"
+                style={{
+                  padding: index === data.actions.length - 1 && "0",
+                  borderRight: index === data.actions.length - 1 && "none",
+                }}
+              >
+                {item.label}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+      {user && (
+        <div className="notification-actions">
+          <div className="notification-actions-btns">
+            {data.actions.map((item) => (
+              <button
+                className={`notification-actions-btn ${
+                  item.status && "notification-actions-btn-active"
+                }`}
+                key={item.id}
+                onClick={() => {
+                  handleAction({
+                    notificationID: data.notificationID,
+                    action: item.id,
+                    status: !item.status,
+                  });
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+          <span className="notification-time">{data.sentTime}</span>
+        </div>
+      )}
     </div>
   );
 };

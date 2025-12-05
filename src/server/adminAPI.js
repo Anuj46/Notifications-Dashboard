@@ -1,71 +1,88 @@
-import { v4 as uuidv4 } from "uuid";
 import {
   apiDelay,
   getLocalStorageNotifications,
   saveLocalStorageNotifications,
+  REACT_APP_BASE_KEY as localStorageNotificationKey,
+  REACT_APP_USER_KEY as localStorageUserKey,
 } from "./utils";
-const localStorageKey = process.env.REACT_APP_BASE_KEY;
 
 export const notificationApi = {
   // Get all notifications with pagination
-  async getNotifications(page, itemsCount = 10) {
+  async getNotifications({
+    sortBy = "desc",
+    actions = [],
+    channels = [],
+    searchQuery = "",
+  } = {}) {
     return new Promise((resolve, reject) => {
-      if (page !== undefined) {
-        const pageNum = Number(page);
-        const itemsNum = Number(itemsCount);
-
-        if (
-          isNaN(pageNum) ||
-          isNaN(itemsNum) ||
-          pageNum <= 0 ||
-          itemsNum <= 0
-        ) {
-          return reject({
-            statusCode: 404,
-            status: "failed",
-            message: "Please provide valid page or itemCount",
-          });
-        }
-      }
-
       apiDelay(300).then(() => {
-        const allNotifications = getLocalStorageNotifications(localStorageKey);
-        const result = {
-          statusCode: 200,
-          status: "success",
-          message: "Notifications fetched Successfully",
-        };
+        const allNotifications = getLocalStorageNotifications(
+          localStorageNotificationKey
+        );
+        const allActions = getLocalStorageNotifications("actions");
+        const allChannels = getLocalStorageNotifications("channels");
 
-        if (page === undefined) {
-          return resolve({
-            ...result,
-            data: {
-              notifications: allNotifications,
-              totalRecords: allNotifications.length,
-            },
-          });
+        let filtered = [...allNotifications];
+
+        if (searchQuery.trim() !== "") {
+          const q = searchQuery.toLowerCase();
+          filtered = filtered.filter((item) =>
+            item.title.toLowerCase().includes(q)
+          );
         }
 
-        const pageNum = Number(page);
-        const itemsNum = Number(itemsCount);
+        if (actions.length > 0) {
+          filtered = filtered.filter((item) =>
+            item.actions.some((act) => actions.includes(act))
+          );
+        }
 
-        const paginatedItems = allNotifications.slice(
-          (pageNum - 1) * itemsNum,
-          pageNum * itemsNum
-        );
+        if (channels.length > 0) {
+          filtered = filtered.filter((item) =>
+            item.channels.some((ch) => channels.includes(ch))
+          );
+        }
+
+        filtered.sort((a, b) => {
+          const dateA = new Date(a.created);
+          const dateB = new Date(b.created);
+          return sortBy === "asc" ? dateA - dateB : dateB - dateA;
+        });
+
+        filtered = filtered.map((item) => {
+          const mappedActions = item.actions.map((id) =>
+            allActions.find((act) => act.id === id)
+          );
+
+          const mappedChannels = item.channels.map((id) =>
+            allChannels.find((ch) => ch.id === id)
+          );
+
+          return {
+            ...item,
+            actions: mappedActions,
+            channels: mappedChannels,
+          };
+        });
+
+        const sentNotifications = filtered.filter((item) => item.sent);
+        const unsentNotifications = filtered.filter((item) => !item.sent);
 
         return resolve({
-          ...result,
+          statusCode: 200,
+          status: "success",
+          message: "Notifications fetched successfully",
           data: {
-            notifications: paginatedItems,
-            totalRecords: allNotifications.length,
+            sentNotifications,
+            unsentNotifications,
+            totalRecords: filtered.length,
           },
         });
       });
     });
   },
 
-  // Add single notification
+  // Add notification
   async addNotification(item) {
     return new Promise((resolve, reject) => {
       const { title, description, category } = item;
@@ -80,8 +97,10 @@ export const notificationApi = {
       }
 
       apiDelay(500).then(() => {
-        const allNotifications = getLocalStorageNotifications(localStorageKey);
-        const notificationID = uuidv4();
+        const allNotifications = getLocalStorageNotifications(
+          localStorageNotificationKey
+        );
+        const notificationID = Date.now();
 
         const newItem = {
           notificationID,
@@ -93,7 +112,10 @@ export const notificationApi = {
         };
 
         allNotifications.unshift(newItem);
-        saveLocalStorageNotifications(localStorageKey, allNotifications);
+        saveLocalStorageNotifications(
+          localStorageNotificationKey,
+          allNotifications
+        );
 
         resolve({
           statusCode: 201,
@@ -111,7 +133,9 @@ export const notificationApi = {
 
   async editNotification(item) {
     return new Promise((resolve, reject) => {
-      const allNotifications = getLocalStorageNotifications(localStorageKey);
+      const allNotifications = getLocalStorageNotifications(
+        localStorageNotificationKey
+      );
       const editableItem = allNotifications.find(
         (notification) => notification.notificationID === item.notificationID
       );
@@ -134,7 +158,10 @@ export const notificationApi = {
           }
         );
 
-        saveLocalStorageNotifications(localStorageKey, newNotifications);
+        saveLocalStorageNotifications(
+          localStorageNotificationKey,
+          newNotifications
+        );
         resolve({
           statusCode: 201,
           status: "success",
@@ -149,7 +176,9 @@ export const notificationApi = {
 
   async deleteNotification(item) {
     return new Promise((resolve, reject) => {
-      const allNotifications = getLocalStorageNotifications(localStorageKey);
+      const allNotifications = getLocalStorageNotifications(
+        localStorageNotificationKey
+      );
       const deleteItem = allNotifications.find(
         (notification) => notification.notificationID === item.notificationID
       );
@@ -166,7 +195,10 @@ export const notificationApi = {
         (notification) => notification.notificationID !== item.notificationID
       );
 
-      saveLocalStorageNotifications(localStorageKey, filteredNotifications);
+      saveLocalStorageNotifications(
+        localStorageNotificationKey,
+        filteredNotifications
+      );
       resolve({
         statusCode: 204,
         status: "success",
@@ -175,23 +207,3 @@ export const notificationApi = {
     });
   },
 };
-
-// const obj = {
-// notificationID,
-// channels,
-// counts:{
-//     like,
-//     dislike,
-//     read,
-//     unread,
-//     dismiss,
-// }
-// actions:{
-//     like:true,
-//     dismiss:true
-// },
-// title,
-// description,
-// created,
-// sent
-// }

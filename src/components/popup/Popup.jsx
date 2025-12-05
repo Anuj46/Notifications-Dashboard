@@ -23,10 +23,22 @@ const Popup = ({ isOpen, onClose, title, footer, children }) => {
 
         {footer && (
           <div className="popup-footer">
-            <button onClick={footer.onCancel} className="btn btn-secondary">
+            <button
+              onClick={footer.onCancel}
+              className="btn btn-secondary"
+              style={{
+                width: footer?.size,
+              }}
+            >
               {footer.cancelButtonText || "Cancel"}
             </button>
-            <button onClick={footer.onAdd} className="btn btn-primary">
+            <button
+              onClick={footer.onAdd}
+              className="btn btn-primary"
+              style={{
+                width: footer?.size,
+              }}
+            >
               {footer.addButtonText || "Add"}
             </button>
           </div>

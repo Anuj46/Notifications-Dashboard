@@ -1,21 +1,56 @@
 import React, { useState } from "react";
 import "./notificationForm.css";
+import { CaretDown } from "@phosphor-icons/react";
 
 const NotificationForm = ({ formData, handleChange, handleAction }) => {
+  const [open, setOpen] = useState(false);
+
+  const channels = [
+    { label: "Email", value: "email" },
+    { label: "SMS", value: "sms" },
+    { label: "Push", value: "push" },
+  ];
+
+  const toggleValue = (value) => {
+    const updated = formData.channel.includes(value)
+      ? formData.channel.filter((v) => v !== value)
+      : [...formData.channel, value];
+
+    handleChange("channel", updated);
+  };
   return (
     <div className="form-wrapper">
-      <div className="form-group">
+      <div className="form-group form-select">
         <label className="form-label">Channel</label>
-        <select
-          className="form-select"
-          value={formData.channel}
-          onChange={(e) => handleChange("channel", e.target.value)}
+
+        <div
+          className={`multi-select ${open && "multi-select-active"}`}
+          onClick={() => setOpen(!open)}
         >
-          <option value="">Select</option>
-          <option value="email">Email</option>
-          <option value="sms">SMS</option>
-          <option value="push">Push</option>
-        </select>
+          {formData.channel.length > 0
+            ? formData.channel
+                .map((val) => channels.find((c) => c.value === val)?.label)
+                .join(", ")
+            : "Select"}
+          <div className={open && "multi-select-icon"}>
+            <CaretDown size={14} />
+          </div>
+        </div>
+
+        {open && (
+          <div className="dropdown">
+            {channels.map((ch) => (
+              <label className="dropdown-option" key={ch.value}>
+                <input
+                  type="checkbox"
+                  checked={formData.channel.includes(ch.value)}
+                  onChange={() => toggleValue(ch.value)}
+                />
+                {ch.label}
+              </label>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="form-group">
@@ -47,10 +82,10 @@ const NotificationForm = ({ formData, handleChange, handleAction }) => {
             <input
               type="checkbox"
               className="form-checkbox"
-              checked={formData.markAsRead}
-              onChange={(e) => handleChange("markAsRead", e.target.checked)}
+              checked={formData.like}
+              onChange={(e) => handleChange("like", e.target.checked)}
             />
-            <span>Mark as read</span>
+            <span>Like</span>
           </label>
 
           <label className="checkbox-label">

@@ -78,3 +78,37 @@
   max-height: 5.5ch;
   position: relative;
 }
+
+.notification-actions-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.notification-actions-btn {
+  font-size: 0.675rem;
+  border: 1px solid #dfe4e9;
+  background: #fff;
+  border-radius: 1rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+}
+
+.notification-actions-btn:hover {
+  background: #f5f5f5;
+}
+
+.notification-actions-btn-active {
+  border-color: #b21c64;
+  color: #b21c64;
+  background: #ffe9f3;
+}
+
+.notification-actions-btn-active:hover {
+  background: #fdd5e7;
+}
+
+.notification-time {
+  color: #737791;
+  font-size: 0.675rem;
+}

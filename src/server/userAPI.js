@@ -1,12 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
 import {
   apiDelay,
   getLocalStorageNotifications,
   saveLocalStorageNotifications,
+  REACT_APP_BASE_KEY as localStorageNotificationKey,
+  REACT_APP_USER_KEY as localStorageUserKey,
 } from "./utils";
-
-const localStorageNotificationKey = process.env.REACT_APP_BASE_KEY;
-const localStorageUserKey = process.env.REACT_APP_USER_KEY;
 
 export const userNotificationApi = {
   async getNotification() {
@@ -86,7 +84,7 @@ export const userNotificationApi = {
   },
 
   async deleteNotification(id) {
-    return new Promise((reolve, reject) => {
+    return new Promise((resolve, reject) => {
       apiDelay(400).then(() => {
         const userNotifications =
           getLocalStorageNotifications(localStorageUserKey);
@@ -110,8 +108,6 @@ export const userNotificationApi = {
 // const obj = {
 //   title,
 //   description,
-//   read,
-//   dismiss,
-//   liked,
+//   actions:[{label,marked}]
 //  getDate
 // };

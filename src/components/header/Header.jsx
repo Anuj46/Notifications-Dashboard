@@ -9,6 +9,7 @@ import {
 import "./header.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Popup from "../popup/Popup";
+import NotificationCard from "../cards/NotificationCard";
 
 const navigations = [
   {
@@ -25,9 +26,197 @@ const navigations = [
   },
 ];
 
+const obj = [
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+  {
+    title: "TEST title",
+    description: "This is a test description",
+    notificationID: "125454545",
+    sentTime: "24 Nov 2025",
+    actions: [
+      {
+        label: "Like",
+        id: "like",
+        status: true,
+      },
+      {
+        label: "Dismiss",
+        id: "dismiss",
+        status: true,
+      },
+      {
+        label: "Mark as read",
+        id: "read",
+        status: true,
+      },
+    ],
+  },
+];
+
 const Header = () => {
   const [menus, setMenus] = useState(navigations);
   const [seletedMenu, setSelectedMenu] = useState();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,6 +228,24 @@ const Header = () => {
       setSelectedMenu("dashboard");
     }
   }, [location.pathname]);
+
+  const handleCancel = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleMarkAllRead = () => {};
+
+  const footer = {
+    addButtonText: "Mark All Read",
+    onAdd: handleMarkAllRead,
+    cancelButtonText: "Cancel",
+    onCancel: handleCancel,
+    size: "fit-content",
+  };
+
+  const handleAction = (data) => {
+    console.log(data);
+  };
 
   return (
     <>
@@ -60,7 +267,10 @@ const Header = () => {
           ))}
         </div>
         <div className="header_right">
-          <div className="header_right_icon_wrapper">
+          <div
+            className="header_right_icon_wrapper"
+            onClick={() => setIsPopupOpen(true)}
+          >
             <Bell size={14} />
           </div>
           <LineVertical size={16} color="#737791" />
@@ -72,7 +282,22 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <Popup title="Add Filters"></Popup>
+      <Popup
+        title="Add Filters"
+        footer={footer}
+        isOpen={isPopupOpen}
+        onClose={handleCancel}
+      >
+        <div className="user_notifications_container">
+          {obj.map((item) => (
+            <NotificationCard
+              data={item}
+              user={true}
+              handleAction={handleAction}
+            />
+          ))}
+        </div>
+      </Popup>
     </>
   );
 };

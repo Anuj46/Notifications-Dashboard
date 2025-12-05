@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./notification.css";
 import Popup from "../../components/popup/Popup";
 import {
@@ -9,70 +9,97 @@ import {
 } from "@phosphor-icons/react";
 import NotificationCard from "../../components/cards/NotificationCard";
 import NotificationForm from "../../components/form/NotificationForm";
-import { items } from "../../../mmmmm";
-
-const channels = [
-  {
-    label: "SMS",
-    id: "sms",
-  },
-  {
-    label: "E-mail",
-    id: "email",
-  },
-  {
-    label: "WhatsApp",
-    id: "whatsapp",
-  },
-  {
-    label: "In-App",
-    id: "in-app",
-  },
-  {
-    label: "Teams",
-    id: "teams",
-  },
-  {
-    label: "Slack",
-    id: "slack",
-  },
-];
-
-const actions = [
-  {
-    label: "Mark as read",
-    id: "read",
-  },
-  {
-    label: "Like",
-    id: "like",
-  },
-  {
-    label: "Dismiss",
-    id: "dismiss",
-  },
-];
+import delete_img from "../../assets/delete_img.png";
+import { notificationApi, dashboardAPI } from "../../server";
 
 const Notifications = () => {
-  const [undeliveredNotification, setUndeliveredNotifications] =
-    useState(items);
+  const [undeliveredNotification, setUndeliveredNotifications] = useState([]);
+  const [deliveredNotifications, setDeliveredNotifications] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
   const [filterPopup, setFilterPopup] = useState(false);
-  const [filters, setFilters] = useState({
+
+  // ---- DEFAULT Filters ----
+  const defaultFilters = {
+    sortBy: "desc",
     channels: [],
     actions: [],
-  });
+  };
+
+  const [filters, setFilters] = useState(defaultFilters);
+  const [appliedFilters, setAppliedFilters] = useState(defaultFilters);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    channel: "",
-    frequency: "",
-    validTill: "",
-    markAsRead: false,
+    channel: [],
+    like: false,
     dismiss: false,
   });
 
+  const [actions, setActions] = useState([]);
+  const [channels, setChannels] = useState([]);
+
+  // Fetch Actions
+  const fetchActions = async () => {
+    try {
+      const res = await dashboardAPI.getActions();
+      setActions(res.data.actions);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Fetch Channels
+  const fetchChannels = async () => {
+    try {
+      const res = await dashboardAPI.getChannels();
+      setChannels(res.data.channels);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Fetch Notifications
+  const fetchNotifications = async (
+    filterObj = defaultFilters,
+    search = ""
+  ) => {
+    try {
+      const res = await notificationApi.getNotifications({
+        ...filterObj,
+        searchQuery: search, // ⬅ added
+      });
+
+      setDeliveredNotifications(res.data.sentNotifications);
+      setUndeliveredNotifications(res.data.unsentNotifications);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Initial Load
+  useEffect(() => {
+    fetchActions();
+    fetchChannels();
+    fetchNotifications(defaultFilters);
+  }, []);
+
+  // ---- Search ----
+  const handleSearch = () => {
+    fetchNotifications(appliedFilters, searchQuery);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
+  // ---- Form ----
   const handleFormChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -87,10 +114,8 @@ const Notifications = () => {
     setFormData({
       title: "",
       description: "",
-      channel: "",
-      frequency: "",
-      validTill: "",
-      markAsRead: false,
+      channel: [],
+      like: false,
       dismiss: false,
     });
   };
@@ -102,13 +127,45 @@ const Notifications = () => {
     onCancel: handleCancel,
   };
 
+  // ---- Notification Actions ----
   const handleAction = (data) => {
-    console.log(data);
+    if (data.action === "delete") {
+      setDeletePopup(true);
+    }
   };
-  // filters
-  const handleApplyFilter = () => {};
+
+  // ---- FILTER LOGIC ----
+
+  const handleSortBy = (value) => {
+    setFilters((prev) => ({ ...prev, sortBy: value }));
+  };
+
+  const toggleChannel = (id) => {
+    setFilters((prev) => ({
+      ...prev,
+      channels: prev.channels.includes(id)
+        ? prev.channels.filter((c) => c !== id)
+        : [...prev.channels, id],
+    }));
+  };
+
+  const toggleAction = (id) => {
+    setFilters((prev) => ({
+      ...prev,
+      actions: prev.actions.includes(id)
+        ? prev.actions.filter((a) => a !== id)
+        : [...prev.actions, id],
+    }));
+  };
+
+  const handleApplyFilter = () => {
+    setAppliedFilters(filters);
+    fetchNotifications(filters);
+    setFilterPopup(false);
+  };
 
   const handleCancelFilter = () => {
+    setFilters(appliedFilters); // Restore last applied
     setFilterPopup(false);
   };
 
@@ -119,29 +176,40 @@ const Notifications = () => {
     onCancel: handleCancelFilter,
   };
 
-  // delete
-  const handleDeleteNotification = () => {};
+  // ---- Delete ----
+  const handleDeleteNotification = () => {
+    setDeletePopup(false);
+  };
 
   const handleCancelDelete = () => {
-    setDeletePopup(true);
+    setDeletePopup(false);
   };
 
   return (
     <>
+      {/* HEADER */}
       <div className="notification_wrapper">
         <div className="notification_header">
           <span className="notification_heading">Notifications</span>
+
           <div className="notification_actions">
             <div className="notification_search">
               <input
                 type="text"
                 placeholder="Search by Title"
                 className="notification_search_field"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
-              <button className="notification_search_button">
+              <button
+                className="notification_search_button"
+                onClick={handleSearch}
+              >
                 <MagnifyingGlass size={14} />
               </button>
             </div>
+
             <button
               className="notification_actions_btn notification_actions_filter_btn"
               onClick={() => setFilterPopup(true)}
@@ -149,15 +217,19 @@ const Notifications = () => {
               <Faders size={14} />
               Filter
             </button>
+
             <button
-              className="notification_actions_btn notification_actions_add_btn"
+              className="notification_actions_btn notification_actions_btn_primary"
               onClick={() => setIsPopupOpen(true)}
             >
               <Plus size={14} color="#ffff" /> Add
             </button>
           </div>
         </div>
+
+        {/* CONTENT */}
         <div className="notification-content">
+          {/* Undelivered */}
           <div className="notification-content-section">
             <div className="notification-content-header">
               <span className="notification-content-heading">
@@ -167,36 +239,40 @@ const Notifications = () => {
                 Send <PaperPlaneRight size={12} />
               </button>
             </div>
+
             <div className="notification-undelivered-cards">
               {undeliveredNotification.map((notification) => (
-                <React.Fragment key={notification.notificationID}>
-                  <NotificationCard
-                    data={notification}
-                    handleAction={handleAction}
-                  />
-                </React.Fragment>
+                <NotificationCard
+                  key={notification.notificationID}
+                  data={notification}
+                  handleAction={handleAction}
+                />
               ))}
             </div>
           </div>
+
+          {/* Delivered */}
           <div className="notification-content-section notification-delivered-section">
             <div className="notification-content-header">
               <span className="notification-content-heading">
                 Delivered Notifications
               </span>
             </div>
+
             <div className="notification-delivered-cards">
-              {undeliveredNotification.map((notification) => (
-                <React.Fragment key={notification.notificationID}>
-                  <NotificationCard
-                    data={notification}
-                    handleAction={handleAction}
-                  />
-                </React.Fragment>
+              {deliveredNotifications.map((notification) => (
+                <NotificationCard
+                  key={notification.notificationID}
+                  data={notification}
+                  handleAction={handleAction}
+                />
               ))}
             </div>
           </div>
         </div>
       </div>
+
+      {/* POPUPS */}
       <Popup
         isOpen={isPopupOpen}
         onClose={handleCancel}
@@ -205,22 +281,36 @@ const Notifications = () => {
       >
         <NotificationForm formData={formData} handleChange={handleFormChange} />
       </Popup>
+
       <Popup
         isOpen={deletePopup}
         onClose={handleCancelDelete}
         title="Delete Notification"
       >
-        <div>
-          <img src="" alt="" />
-          <span>Delete Notification</span>
-          <span>
-            Your file has been processed, and the summary has been sent to your
-            registered email ID.
-          </span>
-          <button>Cancel</button>
-          <button>Delete</button>
+        <div className="delete_content_wrapper">
+          <div className="delete_content">
+            <img src={delete_img} alt="delete-img" />
+            <span className="delete_heading">Delete Notification</span>
+            <span className="delete_label">
+              Your file has been processed, and the summary has been sent to
+              your registered email ID.
+            </span>
+            <div className="delete_action_btns">
+              <button
+                className="notification_actions_btn notification_actions_btn_secondary"
+                onClick={handleCancelDelete}
+              >
+                Cancel
+              </button>
+              <button className="notification_actions_btn notification_actions_btn_primary">
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       </Popup>
+
+      {/* FILTER POPUP */}
       <Popup
         title="Add Filters"
         isOpen={filterPopup}
@@ -228,21 +318,72 @@ const Notifications = () => {
         footer={filterFooter}
       >
         <div className="filters_wrapper">
+          {/* Sort */}
+          <div className="filters_section">
+            <span className="filters_heading">Sort By</span>
+            <div className="filters_items">
+              <div
+                className="filter_sort_field"
+                onClick={() => handleSortBy("desc")}
+              >
+                <input
+                  type="radio"
+                  name="sort"
+                  checked={filters.sortBy === "desc"}
+                  onChange={() => handleSortBy("desc")}
+                />
+                <span>Most Recent</span>
+              </div>
+
+              <div
+                className="filter_sort_field"
+                onClick={() => handleSortBy("asc")}
+              >
+                <input
+                  type="radio"
+                  name="sort"
+                  checked={filters.sortBy === "asc"}
+                  onChange={() => handleSortBy("asc")}
+                />
+                <span>Oldest First</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Channels */}
           <div className="filters_section">
             <span className="filters_heading">Channels</span>
             <div className="filters_items">
               {channels.map((item) => (
-                <div className="filters_item" key={item.id}>
+                <div
+                  key={item.id}
+                  className={`filters_item ${
+                    filters.channels.includes(item.id)
+                      ? "filters_item-active"
+                      : ""
+                  }`}
+                  onClick={() => toggleChannel(item.id)}
+                >
                   {item.label}
                 </div>
               ))}
             </div>
           </div>
+
+          {/* Actions */}
           <div className="filters_section">
             <span className="filters_heading">Actions</span>
             <div className="filters_items">
               {actions.map((item) => (
-                <div className="filters_item filters_item-active" key={item.id}>
+                <div
+                  key={item.id}
+                  className={`filters_item ${
+                    filters.actions.includes(item.id)
+                      ? "filters_item-active"
+                      : ""
+                  }`}
+                  onClick={() => toggleAction(item.id)}
+                >
                   {item.label}
                 </div>
               ))}
